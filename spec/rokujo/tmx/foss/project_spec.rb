@@ -48,15 +48,9 @@ RSpec.describe Rokujo::TMX::FOSS::Project do
     end
   end
 
-  describe "#po_subdir" do
-    it "replaces templates in the value" do
-      expect(project.po_subdir).to match(/#{project.name}-#{project.template[:git_tag]}/)
-    end
-  end
-
-  describe "#no_worksubdir" do
+  describe "#no_worksubdir?" do
     it "returns TrueClass" do
-      expect(project.no_worksubdir).to be_a TrueClass
+      expect(project.no_worksubdir?).to be_a TrueClass
     end
   end
 end
