@@ -39,6 +39,7 @@ Gem::Specification.new do |spec|
 
   # Uncomment to register a new dependency of your gem
   # spec.add_dependency "example-gem", "~> 1.0"
+  spec.add_dependency "fiddle", "~> 1.0"
   spec.add_dependency "httpx", "~> 1.0"
   spec.add_dependency "minitar", "~> 1.0"
   spec.add_dependency "ruby-xz", "~> 1.0"
