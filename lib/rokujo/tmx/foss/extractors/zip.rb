@@ -15,11 +15,11 @@ module Rokujo
           end
 
           def extract
-            Zip::File.open(@file) do |zip_file|
+            Zip::File.open(@file.to_s) do |zip_file|
               zip_file.each do |entry|
                 raise "File `#{entry.name}` is too large (#{entry.size} > #{MAX_SIZE_BYTE})" if file_too_large?(entry)
 
-                entry.extract(destination_directory: @dest_dir)
+                entry.extract(destination_directory: @dest_dir.to_s)
               end
             end
           end

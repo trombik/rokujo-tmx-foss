@@ -3,8 +3,9 @@
     git_tag: 4c5583adc297cd4a2e2d68b0e3c371e1981ac47d
   dist_url: https://gitlab.com/inkscape/translations/-/archive/%%git_tag%%/translations-%%git_tag%%.zip
   dist_filename: "%%name%%-%%git_tag%%.zip"
+  # the archive has a sub-directory
   worksubdir: "translations-%%git_tag%%"
-  no_worksubdir: true
+  no_worksubdir: false
   src_language: en
   target_language: ja
   files:

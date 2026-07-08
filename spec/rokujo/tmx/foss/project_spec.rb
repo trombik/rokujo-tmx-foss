@@ -52,5 +52,19 @@ RSpec.describe Rokujo::TMX::FOSS::Project do
     it "returns TrueClass" do
       expect(project.no_worksubdir?).to be_a TrueClass
     end
+
+    it "returns true" do
+      expect(project.no_worksubdir?).to be true
+    end
+  end
+
+  describe "#logger" do
+    it "returns Rokujo::TMX::FOSS::Logger class" do
+      expect(project.logger).to be_a Rokujo::TMX::FOSS::Logger
+    end
+
+    it "responds to :info log methods" do
+      expect(project.logger).to respond_to :info
+    end
   end
 end

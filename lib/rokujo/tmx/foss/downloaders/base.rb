@@ -6,11 +6,12 @@ module Rokujo
     module FOSS
       module Downloader
         class Base
-          attr_reader :uri, :path
+          attr_reader :uri, :path, :logger
 
-          def initialize(uri:, path:, **args)
+          def initialize(uri:, path:, logger:, **args)
             @uri = URI(uri)
             @path = Pathname.new(path)
+            @logger = logger
             @args = args
           end
 

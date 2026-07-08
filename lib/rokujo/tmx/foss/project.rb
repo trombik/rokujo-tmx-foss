@@ -2,7 +2,7 @@ require "pathname"
 require "rokujo/tmx/foss/downloaders/http"
 require "rokujo/tmx/foss/extractors/zip"
 require "rokujo/tmx/foss/extractors/tar"
-require "pry"
+require "rokujo/tmx/foss/logger"
 require "shellwords"
 
 module Rokujo
@@ -24,6 +24,7 @@ module Rokujo
           @template = { name: @name }.merge(args[:template])
           @dist_filename = args[:dist_filename]
           @raw_patterns = args[:files]
+          logger.debug args
         end
 
         # Returns Array of Pathname of matched files. The file paths are absolute
@@ -31,14 +32,19 @@ module Rokujo
         def files
           return @files if @files
 
+          logger.debug "workdir: #{workdir}"
+
           Dir.chdir(workdir) do
             @files = @raw_patterns.flat_map do |pattern|
+              logger.debug "pattern: #{pattern}"
               matched_files = Pathname.glob(pattern)
               return nil if matched_files.empty?
 
               matched_files.map { |f| Pathname.new f.realpath }
             end.uniq.compact
           end
+          logger.debug "files: #{@files}"
+          @files
         end
 
         def dist_filename
@@ -58,20 +64,20 @@ module Rokujo
         end
 
         def fetch
-          # binding.pry
+          return if distfile.exist?
 
-          Rokujo::TMX::Downloader::HTTP.new(uri: dist_url, path: distfile).fetch unless distfile.exist?
+          Rokujo::TMX::FOSS::Downloader::HTTP.new(uri: dist_url, path: distfile, logger: logger).fetch
         end
 
         def extract
           FileUtils.mkdir_p WRKDIRPREFIX
           FileUtils.mkdir_p workdir
-          dest_dir = no_worksubdir? ? WRKDIRPREFIX : workdir
+          dest_dir = no_worksubdir? ? workdir : WRKDIRPREFIX
           case ext
           when ".zip"
-            Rokujo::TMX::Extractor::ZIP.new(file: distfile, dest_dir: dest_dir).extract
+            Rokujo::TMX::FOSS::Extractor::ZIP.new(file: distfile, dest_dir: dest_dir).extract
           when ".tar.gz", ".tgz", ".tar.xz", ".txz"
-            Rokujo::TMX::Extractor::Tar.new(file: distfile, dest_dir: dest_dir).extract
+            Rokujo::TMX::FOSS::Extractor::Tar.new(file: distfile, dest_dir: dest_dir).extract
           else
             raise "Unknown ext: `#{ext}`"
           end
@@ -103,6 +109,12 @@ module Rokujo
           FileUtils.rm_rf(workdir)
         end
 
+        def logger
+          return @logger if @logger
+
+          @logger = Rokujo::TMX::FOSS::Logger.new
+        end
+
         private
 
         def convert_to_tmx(file)
@@ -110,19 +122,19 @@ module Rokujo
 
           tmx_file = "#{file}.tmx"
           stage_dir = STAGEDIR / worksubdir / file.relative_path_from(workdir).dirname
-          puts "Creating stage_dir: #{stage_dir}"
+          logger.info "Creating stage_dir: #{stage_dir}"
           FileUtils.mkdir_p(stage_dir)
 
           Dir.chdir(workdir) do
-            puts "workdir: #{workdir}"
-            puts "tikal -2tmx #{file.to_s.shellescape} -sl EN -tl JA"
+            logger.debug "workdir: #{workdir}"
+            logger.debug "tikal -2tmx #{file.to_s.shellescape} -sl EN -tl JA"
             `tikal -2tmx #{file.to_s.shellescape} -sl EN -tl JA`
-            puts "Moving #{tmx_file} to #{stage_dir}"
+            logger.info "Moving #{tmx_file} to #{stage_dir}"
             FileUtils.mv tmx_file, stage_dir
           end
         rescue StandardError => e
-          puts e
-          puts "skipping #{file.realpath}"
+          logger.error e
+          logger.error "skipping #{file.realpath}"
         end
 
         def file_id(file)
