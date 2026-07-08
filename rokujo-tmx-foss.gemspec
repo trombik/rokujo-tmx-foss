@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.authors = ["Tomoyuki Sakurai"]
   spec.email = ["y@trombik.org"]
 
-  spec.summary = "TODO: Write a short summary, because RubyGems requires one."
+  spec.summary = "Creates translation memory from FOSS project source."
   spec.description = "TODO: Write a longer description or delete this line."
   spec.homepage = "https://github.com/trombik/rokujo-tmx-foss"
   spec.license = "MIT"
@@ -39,10 +39,10 @@ Gem::Specification.new do |spec|
 
   # Uncomment to register a new dependency of your gem
   # spec.add_dependency "example-gem", "~> 1.0"
-  spec.add_dependency "rubyzip", "~> 1.0"
+  spec.add_dependency "httpx", "~> 1.0"
   spec.add_dependency "minitar", "~> 1.0"
   spec.add_dependency "ruby-xz", "~> 1.0"
-  spec.add_dependency "httpx", "~> 1.0"
+  spec.add_dependency "rubyzip", "~> 1.0"
 
   # For more information and examples about making a new gem, check out our
   # guide at: https://guides.rubygems.org/make-your-own-gem/
