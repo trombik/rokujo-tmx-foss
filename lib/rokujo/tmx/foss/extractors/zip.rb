@@ -17,7 +17,7 @@ module Rokujo
           def extract
             Zip::File.open(@file) do |zip_file|
               zip_file.each do |entry|
-                raise "File `#{entry.name}` is too large (#{entry.size} > #{MAX_SIZE_BYTE})" if entry.size > MAX_SIZE_BYTE
+                raise "File `#{entry.name}` is too large (#{entry.size} > #{MAX_SIZE_BYTE})" if file_too_large?(entry)
 
                 entry.extract(destination_directory: @dest_dir)
               end
@@ -25,6 +25,10 @@ module Rokujo
           end
 
           private
+
+          def file_too_large?(entry)
+            entry.size > MAX_SIZE_BYTE
+          end
 
           def check_sanity
             raise "#{@dest_dir} does not exist" unless @dest_dir.exist? && @dest_dir.directory?
