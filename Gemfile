@@ -2,20 +2,11 @@
 
 source "https://rubygems.org"
 
-gem "rubyzip"
-gem "fiddle"
-gem "yaml"
+# Specify your gem's dependencies in rokujo-tmx-foss.gemspec
+gemspec
+
+gem "irb"
 gem "pry"
-
-group :development do
-  gem "rubocop"
-  gem "rspec"
-end
-
-gem "faraday", "~> 2.14"
-
-gem "minitar", "~> 1.1"
-
-gem "ruby-xz", "~> 1.0"
-
-gem "httpx", "~> 1.7"
+gem "rake", "~> 13.0"
+gem "rspec", "~> 3.0"
+gem "rubocop", "~> 1.21"

@@ -1,8 +1,6 @@
 require "spec_helper"
 
-require "rokujo/tmx/project"
-
-RSpec.describe Rokujo::TMX::Project do
+RSpec.describe Rokujo::TMX::FOSS::Project do
   let(:project) { described_class.new(**args) }
   let(:args) do
     {

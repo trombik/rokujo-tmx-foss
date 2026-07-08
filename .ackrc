@@ -1,0 +1,3 @@
+--ignore-dir work
+--ignore-dir stage
+--ignore-dir distfiles
