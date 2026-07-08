@@ -1,0 +1,11 @@
+- name: postgresql
+  template:
+    version: "18.4"
+  dist_url: https://ftp.postgresql.org/pub/source/v%%version%%/postgresql-%%version%%.tar.gz
+  dist_filename: "%%name%%-%%version%%.tar.gz"
+  worksubdir: "%%name%%-%%version%%"
+  no_worksubdir: true
+  src_language: en
+  target_language: ja
+  files:
+    - src/**/ja.po

@@ -1,0 +1,70 @@
+---
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.3
+  # enable detailed explanations available in cops
+  # the default output is not enough to understand what is wrong
+  DisplayCopNames: true
+  ExtraDetails: true
+  DisplayStyleGuide: true
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: double_quotes
+
+Style/SymbolArray:
+  # perefer brackets for `grep-ability`
+  EnforcedStyle: brackets
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Metrics/BlockLength:
+  Exclude:
+    - config/**/*
+    - db/**/*
+  AllowedMethods: []
+
+Metrics/ClassLength:
+  Exclude:
+    - db/migrate/**/*
+  CountAsOne:
+    - array
+    - hash
+    - heredoc
+    - method_call
+
+Metrics/MethodLength:
+  Exclude:
+    - db/migrate/**/*
+  CountAsOne:
+    - array
+    - hash
+    - heredoc
+    - method_call
+Metrics/AbcSize:
+  Exclude:
+    - tmp/**/*
+
+Layout/LineLength:
+  Exclude: []
+  # ignore heredoc for readability
+  AllowHeredoc: true
+  # URLs are almost always long
+  AllowURI: true
+  URISchemes:
+    - http
+    - https
+    - git
+    - ftp
+  AllowCopDirectives: true
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/Documentation:
+  Exclude:
+    - spec/components/previews/**/*
+    - db/migrate/**/*

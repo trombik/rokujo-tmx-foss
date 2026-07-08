@@ -1,0 +1,11 @@
+- name: gimp
+  template:
+    version: "3_2_4"
+  dist_url: https://github.com/GNOME/gimp/archive/refs/tags/GIMP_%%version%%.zip
+  dist_filename: "GIMP-%%version%%.zip"
+  worksubdir: "gimp-GIMP_%%version%%"
+  no_worksubdir: true
+  src_language: en
+  target_language: ja
+  files:
+    - po-*/**/ja.po
