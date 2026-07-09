@@ -20,8 +20,12 @@ module Rokujo
 
           private
 
+          def debug_enabled?
+            logger.configure(&:level) == :debug
+          end
+
           def fetch_stream(file)
-            res = HTTPX.with(debug: false)
+            res = HTTPX.with(debug: debug_enabled?)
                        .plugin(:follow_redirects)
                        .get(uri)
             res.raise_for_status
