@@ -1,37 +1,42 @@
 require "zip"
 
+require_relative "base"
+
 module Rokujo
   module TMX
     module FOSS
-      module Extractor
-        class ZIP
+      class Extractor
+        # An extractor for zip archives.
+        #
+        class ZIP < Rokujo::TMX::FOSS::Extractor::Base
           MAX_SIZE_BYTE = 1024 * 1024 * 1024
 
-          def initialize(file:, dest_dir:, **args)
-            @file = file
-            @dest_dir = dest_dir
-            @args = args
-            check_sanity
+          attr_reader :max_size
+
+          def initialize(max_size: MAX_SIZE_BYTE, **args)
+            @max_size = max_size
+            super(**args)
           end
 
           def extract
+            check_sanity
             Zip::File.open(@file.to_s) do |zip_file|
               zip_file.each do |entry|
-                raise "File `#{entry.name}` is too large (#{entry.size} > #{MAX_SIZE_BYTE})" if file_too_large?(entry)
+                raise "File `#{entry.name}` is too large (#{entry.size} > #{max_size})" if entry_too_large?(entry)
 
                 entry.extract(destination_directory: @dest_dir.to_s)
               end
             end
           end
 
-          private
-
-          def file_too_large?(entry)
-            entry.size > MAX_SIZE_BYTE
+          def supported_extentions
+            %w[.zip]
           end
 
-          def check_sanity
-            raise "#{@dest_dir} does not exist" unless @dest_dir.exist? && @dest_dir.directory?
+          private
+
+          def entry_too_large?(entry)
+            entry.size > max_size
           end
         end
       end

@@ -7,6 +7,7 @@ module Rokujo
   module TMX
     module FOSS
       module Downloader
+        # HTTP downloader.
         class HTTP < Rokujo::TMX::FOSS::Downloader::Base
           def fetch
             return if fetched?
@@ -21,11 +22,12 @@ module Rokujo
 
           def fetch_stream(file)
             res = HTTPX.with(debug: false)
-                       .plugin(:follow_redirects).get(uri)
+                       .plugin(:follow_redirects)
+                       .get(uri)
             res.raise_for_status
             res.body.copy_to(file)
           rescue StandardError => e
-            puts "failed to fetch URI: #{uri} at #{path}"
+            logger.error "failed to fetch URI: #{uri} at #{path}"
             raise e
           end
         end

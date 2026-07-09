@@ -1,7 +1,6 @@
 require "pathname"
 require "rokujo/tmx/foss/downloaders/http"
-require "rokujo/tmx/foss/extractors/zip"
-require "rokujo/tmx/foss/extractors/tar"
+require "rokujo/tmx/foss/extractor"
 require "rokujo/tmx/foss/logger"
 require "shellwords"
 
@@ -22,7 +21,7 @@ module Rokujo
           @worksubdir = args[:worksubdir]
           @no_worksubdir = args[:no_worksubdir] || false
           @template = { name: @name }.merge(args[:template])
-          @dist_filename = args[:dist_filename]
+          @dist_filename = Pathname.new(args[:dist_filename])
           @raw_patterns = args[:files]
           logger.debug args
         end
@@ -32,6 +31,7 @@ module Rokujo
         def files
           return @files if @files
 
+          @files = []
           logger.debug "workdir: #{workdir}"
 
           Dir.chdir(workdir) do
@@ -43,12 +43,11 @@ module Rokujo
               matched_files.map { |f| Pathname.new f.realpath }
             end.uniq.compact
           end
-          logger.debug "files: #{@files}"
-          @files
+          @files ||= []
         end
 
         def dist_filename
-          replace(@dist_filename)
+          Pathname.new(replace(@dist_filename))
         end
 
         def dist_url
@@ -73,14 +72,12 @@ module Rokujo
           FileUtils.mkdir_p WRKDIRPREFIX
           FileUtils.mkdir_p workdir
           dest_dir = no_worksubdir? ? workdir : WRKDIRPREFIX
-          case ext
-          when ".zip"
-            Rokujo::TMX::FOSS::Extractor::ZIP.new(file: distfile, dest_dir: dest_dir).extract
-          when ".tar.gz", ".tgz", ".tar.xz", ".txz"
-            Rokujo::TMX::FOSS::Extractor::Tar.new(file: distfile, dest_dir: dest_dir).extract
-          else
-            raise "Unknown ext: `#{ext}`"
-          end
+          extractor = Rokujo::TMX::FOSS::Extractor.for(dist_filename).new(
+            file: distfile,
+            dest_dir: dest_dir,
+            logger: logger
+          )
+          extractor.extract
         end
 
         # the root directory of the extracted files
@@ -94,7 +91,7 @@ module Rokujo
 
         # the file name to extract
         def distfile
-          DISTDIRPREFIX / dist_filename
+          Pathname.new(DISTDIRPREFIX / dist_filename)
         end
 
         def create_tmx
@@ -120,51 +117,31 @@ module Rokujo
         def convert_to_tmx(file)
           raise "file is not readable: #{file}" unless file.readable?
 
-          tmx_file = "#{file}.tmx"
           stage_dir = STAGEDIR / worksubdir / file.relative_path_from(workdir).dirname
+
           logger.info "Creating stage_dir: #{stage_dir}"
           FileUtils.mkdir_p(stage_dir)
+          logger.debug "workdir: #{workdir}"
+          run_converter(file, stage_dir)
+        end
 
+        def run_converter(file, stage_dir)
           Dir.chdir(workdir) do
-            logger.debug "workdir: #{workdir}"
             logger.debug "tikal -2tmx #{file.to_s.shellescape} -sl EN -tl JA"
             `tikal -2tmx #{file.to_s.shellescape} -sl EN -tl JA`
+            tmx_file = "#{file}.tmx"
             logger.info "Moving #{tmx_file} to #{stage_dir}"
             FileUtils.mv tmx_file, stage_dir
           end
-        rescue StandardError => e
-          logger.error e
-          logger.error "skipping #{file.realpath}"
         end
 
         def file_id(file)
           "#{name}-#{file.relative_path_from(workdir)}"
         end
 
-        def tmx_filename(file)
-          file / ".tmx"
-        end
-
-        def ext
-          known_extentions = %w[
-            .tar.gz
-            .tar.xz
-            .txz
-            .tgz
-            .zip
-          ]
-          known_extentions.each do |ext|
-            return ext if dist_filename.end_with?(ext)
-          end
-
-          raise "dist_filename `#{dist_filename}` has unsupported extention. " \
-                "Supported extentions are: " \
-                "#{known_extentions}"
-        end
-
         # replace placeholders in a string with templates
-        def replace(string)
-          return string unless string
+        def replace(string_or_pathname)
+          string = string_or_pathname.to_s
 
           template.each do |key, value|
             string.gsub!(/%%#{key}%%/, value)

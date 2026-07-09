@@ -5,6 +5,7 @@ module Rokujo
   module TMX
     module FOSS
       module Downloader
+        # Base class for Downloader, Subclass should implement fetch.
         class Base
           attr_reader :uri, :path, :logger
 

@@ -9,6 +9,7 @@ RSpec.describe Rokujo::TMX::FOSS::Project do
         git_tag: "4c5583adc297cd4a2e2d68b0e3c371e1981ac47d"
       },
       dist_url: "https://example.org/%%git_tag%%.zip",
+      dist_filename: "%%git_tag%%.zip",
       no_worksubdir: true,
       po_subdir: "%%name%%-%%git_tag%%"
     }

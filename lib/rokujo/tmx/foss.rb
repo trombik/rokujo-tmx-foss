@@ -2,6 +2,7 @@
 
 require_relative "foss/version"
 require_relative "foss/project"
+require_relative "foss/logger"
 
 module Rokujo
   module TMX
