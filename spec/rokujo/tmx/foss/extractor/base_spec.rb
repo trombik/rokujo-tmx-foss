@@ -1,7 +1,7 @@
 require "spec_helper"
 
 RSpec.describe Rokujo::TMX::FOSS::Extractor::Base do
-  let(:logger) { Rokujo::TMX::FOSS::Logger.new }
+  let(:logger) { Rokujo::TMX::FOSS::Logger.new(:app) }
   let(:file) do
     file = instance_double(Pathname)
     allow(file).to receive_messages(

@@ -1,17 +1,4 @@
-require "yaml"
-require "tty-logger"
-require "rokujo/tmx/foss/project"
+#!/usr/bin/env ruby
+require "rokujo/tmx/foss/cli/commands"
 
-projects = []
-
-YAML.unsafe_load_file("examples/postgresql.yml").each do |project|
-  project.transform_keys!(&:to_sym)
-  projects << Rokujo::TMX::FOSS::Project.new(**project)
-end
-
-projects.each do |p|
-  p.fetch
-  p.extract
-  p.create_tmx
-  p.clean
-end
+Dry::CLI.new(Rokujo::TMX::FOSS::CLI::Commands).call

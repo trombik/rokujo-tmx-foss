@@ -23,7 +23,7 @@ module Rokujo
           @template = { name: @name }.merge(args[:template])
           @dist_filename = Pathname.new(args[:dist_filename])
           @raw_patterns = args[:files]
-          logger.debug args
+          @logger = args[:logger]
         end
 
         # Returns Array of Pathname of matched files. The file paths are absolute
@@ -60,8 +60,12 @@ module Rokujo
           @no_worksubdir
         end
 
+        def fetched?
+          distfile.exist?
+        end
+
         def fetch
-          return if distfile.exist?
+          return if fetched?
 
           Rokujo::TMX::FOSS::Downloader::HTTP.new(uri: dist_url, path: distfile, logger: logger).fetch
         end
@@ -107,7 +111,7 @@ module Rokujo
         def logger
           return @logger if @logger
 
-          @logger = Rokujo::TMX::FOSS::Logger.new
+          @logger = Rokujo::TMX::FOSS::Logger.new(:app)
         end
 
         private
