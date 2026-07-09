@@ -5,15 +5,11 @@ require "xz"
 module Rokujo
   module TMX
     module FOSS
-      module Extractor
-        class Tar
-          def initialize(file:, dest_dir:, **args)
-            @file = file
-            @dest_dir = dest_dir
-            @args = args
-          end
-
+      class Extractor
+        # Extractor implementation with tar. Suppots gzip and xz
+        class Tar < Rokujo::TMX::FOSS::Extractor::Base
           def extract
+            check_sanity
             source = if gzipped?
                        Zlib::GzipReader.new(File.open(@file.to_s, "rb"))
                      elsif xzed?
@@ -23,6 +19,12 @@ module Rokujo
                      end
             Minitar.unpack(source, @dest_dir)
           end
+
+          def supported_extentions
+            %w[.tar .tar.gz .tgz .tar.xz .txz]
+          end
+
+          private
 
           def gzipped?
             @file.to_s.end_with?(".tar.gz") || @file.to_s.end_with?(".tgz")
