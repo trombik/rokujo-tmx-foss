@@ -8,7 +8,7 @@ module Rokujo
       class Logger < SimpleDelegator
         def initialize(*)
           @logger = TTY::Logger.new(*) do |config|
-            config.level = :info
+            config.level = :debug
           end
           super(@logger)
         end

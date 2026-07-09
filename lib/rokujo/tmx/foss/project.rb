@@ -38,12 +38,10 @@ module Rokujo
             @files = @raw_patterns.flat_map do |pattern|
               logger.debug "pattern: #{pattern}"
               matched_files = Pathname.glob(pattern)
-              return nil if matched_files.empty?
-
-              matched_files.map { |f| Pathname.new f.realpath }
+              matched_files.empty? ? nil : matched_files.map { |f| Pathname.new f.realpath }
             end.uniq.compact
           end
-          @files ||= []
+          @files
         end
 
         def dist_filename
