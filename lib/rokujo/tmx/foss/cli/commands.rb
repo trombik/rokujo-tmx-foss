@@ -21,9 +21,11 @@ module Rokujo
             option :stagedir, required: false, desc: "Path to stagedir", default: "stage"
             option :log_level, required: false, desc: "Log level", default: :info, values: [:debug, :info, :warn]
 
+            attr_reader :config
+
             # subclass must call super first
             def call(config:, **options)
-              @config = config
+              @config = Pathname.new(config).expand_path
               @options = options
               logger.debug "config: #{@config}"
               logger.debug "options: #{@options}"
@@ -46,7 +48,7 @@ module Rokujo
               return @projects if @projects
 
               @projects = []
-              YAML.unsafe_load_file("examples/postgresql.yml").each do |project|
+              YAML.unsafe_load_file(config.to_s).each do |project|
                 project.transform_keys!(&:to_sym)
                 @projects << Rokujo::TMX::FOSS::Project.new(**project, **project_options, logger: logger)
               end
