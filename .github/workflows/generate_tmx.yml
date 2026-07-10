@@ -20,10 +20,19 @@ jobs:
           ruby-version: 3.4
           bundler-cache: true
 
+      - name: Cache distfiles
+        uses: actions/cache@v4
+        with:
+          path: distfiles
+          key: ${{ runner.os }}-distfiles-${{ github.run_id }}
+          restore-keys: |
+            ${{ runner.os }}-distfiles-
+
       - name: Install tikal
         run: |
-          wget https://okapiframework.org/binaries/main/1.48.0/okapi-apps_gtk2-linux-x86_64_1.48.0.zip
-          (cd bin && unzip ../okapi-apps_gtk2-linux-x86_64_1.48.0.zip)
+          mkdir -p distfiles
+          wget -O distfiles/okapi.zip https://okapiframework.org/binaries/main/1.48.0/okapi-apps_gtk2-linux-x86_64_1.48.0.zip
+          (cd bin && unzip ../distfiles/okapi.zip)
           mv bin/tikal.sh bin/tikal
           chmod +x bin/tikal
 
