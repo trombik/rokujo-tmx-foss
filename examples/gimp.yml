@@ -8,4 +8,4 @@
   src_language: en
   target_language: ja
   files:
-    - po-*/**/ja.po
+    - "po-*/**/ja.po"

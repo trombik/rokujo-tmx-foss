@@ -1,11 +1,11 @@
 - name: libreoffice
   template:
     version: "26.2.5.1"
-  dist_url: https://github.com/LibreOffice/translations/archive/refs/tags/libreoffice-%%version%%.zip
-  dist_filename: %%name%%-%%version%%.zip
-  worksubdir: translations-libreoffice-%%version%%
+  dist_url: "https://github.com/LibreOffice/translations/archive/refs/tags/libreoffice-%%version%%.zip"
+  dist_filename: "%%name%%-%%version%%.zip"
+  worksubdir: "translations-libreoffice-%%version%%"
   no_worksubdir: true
   src_language: en
   target_language: ja
   files:
-    - source/ja/**/*.po
+    - "source/ja/**/*.po"
