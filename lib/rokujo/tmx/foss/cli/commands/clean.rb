@@ -11,7 +11,10 @@ module Rokujo
 
             def call(config:, **options)
               super
-              logger.info "Cleaned workdir"
+              projects.each do |project|
+                logger.info ">>> Cleaning #{project.name}"
+                project.clean
+              end
             end
           end
         end

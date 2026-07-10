@@ -55,9 +55,11 @@ require_relative "commands/fetch"
 require_relative "commands/extract"
 require_relative "commands/tmx"
 require_relative "commands/clean"
+require_relative "commands/all"
 
 Rokujo::TMX::FOSS::CLI::Commands.register "version", Rokujo::TMX::FOSS::CLI::Commands::Version
 Rokujo::TMX::FOSS::CLI::Commands.register "fetch", Rokujo::TMX::FOSS::CLI::Commands::Fetch
 Rokujo::TMX::FOSS::CLI::Commands.register "extract", Rokujo::TMX::FOSS::CLI::Commands::Extract
 Rokujo::TMX::FOSS::CLI::Commands.register "tmx", Rokujo::TMX::FOSS::CLI::Commands::TMX
 Rokujo::TMX::FOSS::CLI::Commands.register "clean", Rokujo::TMX::FOSS::CLI::Commands::Clean
+Rokujo::TMX::FOSS::CLI::Commands.register "all", Rokujo::TMX::FOSS::CLI::Commands::All

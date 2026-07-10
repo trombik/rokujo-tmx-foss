@@ -8,16 +8,13 @@ module Rokujo
           # Command to extract distfiles
           class Extract < Rokujo::TMX::FOSS::CLI::Commands::Base
             desc "Extract distfiles"
-            argument :config, required: true, desc: "Path to YAML configuration file"
 
-            def call(*)
-              logger.info "Extracted"
-            end
-
-            def depends
-              [
-                Rokujo::TMX::FOSS::CLI::Commands::Fetch
-              ]
+            def call(config:, **options)
+              super
+              projects.each do |project|
+                logger.info ">>> Extracting #{project.name}"
+                project.extract
+              end
             end
           end
         end

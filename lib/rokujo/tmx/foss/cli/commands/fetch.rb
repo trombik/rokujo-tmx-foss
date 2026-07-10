@@ -11,9 +11,9 @@ module Rokujo
 
             def call(config:, **options)
               super
-              projects.each do |p|
-                logger.info "fetching #{p.name}"
-                p.fetch
+              projects.each do |project|
+                logger.info ">>> Fetching #{project.name}"
+                project.fetch
               end
             end
           end

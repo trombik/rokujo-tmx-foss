@@ -13,11 +13,9 @@ module Rokujo
             def call(config:, **options)
               super
               projects.each do |project|
-                project.fetch
-                project.extract
+                logger.info ">>> Generating TMX for #{project.name}"
                 project.create_tmx
               end
-              logger.info "Generated TMX files."
             end
           end
         end
