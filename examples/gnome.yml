@@ -57,3 +57,4 @@
   worksubdir: "%%name%%-%%version%%"
   no_worksubdir: false
   files:
+    - po/ja.po
