@@ -40,14 +40,12 @@ module Rokujo
           end
 
           # Optional method to raise error
-          # rubocop:disable Metrics/AbcSize
           def check_sanity
             raise "#{dest_dir} does not exist" unless dest_dir.exist?
             raise "#{dest_dir} is not a directory" unless dest_dir.directory?
             raise "#{dest_dir} is not writable" unless dest_dir.writable?
             raise ArgumentError, "#{self.class} does not support `#{extname}`." unless supported_file?(extname)
           end
-          # rubocop:enable Metrics/AbcSize
 
           private
 
