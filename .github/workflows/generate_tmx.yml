@@ -1,0 +1,49 @@
+name: Generate TMX files for a release
+
+on:
+  push:
+    tags:
+      - '*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install tikal
+        run: |
+          wget https://okapiframework.org/binaries/main/1.48.0/okapi-apps_gtk2-linux-x86_64_1.48.0.zip
+          (cd bin && unzip ../okapi-apps_gtk2-linux-x86_64_1.48.0.zip)
+          mv bin/tikal.sh bin/tikal
+          chmod +x bin/tikal
+
+      - name: Generate TMX files
+        run: |
+          export PATH="bin:${PATH}"
+          FILES=`echo examples/*`
+          for F in ${FILES} do;
+            echo "Generating TMX files for: ${F}"
+            bundle exec exe/tmx-foss all "${F}" --log-level debug
+          done
+
+      - name: Archive artifacts per directory
+        run: |
+          cd stage
+
+          for dir in */; do
+            dir_name="${dir%/}"
+
+            echo "Packing artifacts for: ${dir_name}"
+            tar -czf "${dir_name}.tar.gz" "$dir_name"
+          done
+
+      - name: Create Release and Upload Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: stage/*.tar.gz
+          generate_release_notes: true
