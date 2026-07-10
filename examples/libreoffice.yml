@@ -4,7 +4,7 @@
   dist_url: "https://github.com/LibreOffice/translations/archive/refs/tags/libreoffice-%%version%%.zip"
   dist_filename: "%%name%%-%%version%%.zip"
   worksubdir: "translations-libreoffice-%%version%%"
-  no_worksubdir: true
+  no_worksubdir: false
   src_language: en
   target_language: ja
   files:
