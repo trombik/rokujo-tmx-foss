@@ -27,7 +27,7 @@
   dist_filename: "%%name%%-%%version%%.tar.gz"
   worksubdir: "%%name%%-%%version%%"
   no_worksubdir: false
-  license_file: COPYING
+  license_file: LICENSE
   files:
     - po/ja.po
 
