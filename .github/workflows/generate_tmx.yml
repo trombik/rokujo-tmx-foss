@@ -29,8 +29,10 @@ jobs:
 
       - name: Generate TMX files
         run: |
-          export PATH="bin:${PATH}"
+          export PATH="`realpath bin`:${PATH}"
+          echo "PATH: ${PATH}"
           FILES=`echo examples/*`
+          echo "${FILES}"
           for F in ${FILES}; do
             echo "Generating TMX files for: ${F}"
             bundle exec exe/tmx-foss all "${F}" --log-level debug
