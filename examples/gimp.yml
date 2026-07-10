@@ -1,8 +1,8 @@
 - name: gimp
   template:
     version: "3_2_4"
-  dist_url: https://github.com/GNOME/gimp/archive/refs/tags/GIMP_%%version%%.zip
-  dist_filename: "GIMP-%%version%%.zip"
+  dist_url: "https://github.com/GNOME/gimp/archive/refs/tags/GIMP_%%version%%.tar.gz"
+  dist_filename: "GIMP-%%version%%.tar.gz"
   worksubdir: "gimp-GIMP_%%version%%"
   no_worksubdir: false
   src_language: en
