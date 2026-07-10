@@ -51,7 +51,7 @@ jobs:
         run: |
           mkdir packages
           tar -czf packages/all.tgz -C stage .
-          (cd stage && zip -r packages/all.zip .)
+          (cd stage && zip -r ../packages/all.zip .)
           cd stage
 
           for dir in */; do
