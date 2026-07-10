@@ -13,7 +13,7 @@ module Rokujo
               super
               projects.each do |project|
                 logger.info ">>> Fetching #{project.name}"
-                logger.debug ">>> Creating distdir #{distdir}"
+                logger.debug ">>> Creating distdir #{project.distdir}"
                 project.fetch
               end
             end
