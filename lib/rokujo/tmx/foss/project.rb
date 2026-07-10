@@ -9,21 +9,48 @@ module Rokujo
     module FOSS
       # A project
       class Project
-        attr_reader :name, :template
-
         DISTDIRPREFIX = Pathname.pwd / "distfiles"
         WRKDIRPREFIX = Pathname.pwd / "work"
-        STAGEDIR = Pathname.pwd / "stage"
+        STAGEDIRPREFIX = Pathname.pwd / "stage"
+
+        attr_reader :logger
 
         def initialize(**args)
-          @name = args[:name]
-          @dist_url = args[:dist_url]
-          @worksubdir = args[:worksubdir]
-          @no_worksubdir = args[:no_worksubdir] || false
-          @template = { name: @name }.merge(args[:template])
-          @dist_filename = Pathname.new(args[:dist_filename])
-          @raw_patterns = args[:files]
-          @logger = args[:logger]
+          @args = args
+          @logger = @args[:logger] || Rokujo::TMX::FOSS::Logger.new(:app)
+          @logger.info args
+        end
+
+        def name
+          @args[:name]
+        end
+
+        def dist_url
+          replace(@args[:dist_url])
+        end
+
+        def worksubdir
+          replace(@args[:worksubdir])
+        end
+
+        def no_worksubdir
+          @args[:no_worksubdir]
+        end
+
+        def template
+          { name: @args[:name] }.merge(@args[:template])
+        end
+
+        def dist_filename
+          Pathname.new replace(@args[:dist_filename])
+        end
+
+        def raw_patterns
+          @args[:files]
+        end
+
+        def stagedir
+          @args[:stagedir] || STAGEDIRPREFIX
         end
 
         # Returns Array of Pathname of matched files. The file paths are absolute
@@ -32,11 +59,9 @@ module Rokujo
           return @files if @files
 
           @files = []
-          logger.debug "workdir: #{workdir}"
 
           Dir.chdir(workdir) do
-            @files = @raw_patterns.flat_map do |pattern|
-              logger.debug "pattern: #{pattern}"
+            @files = raw_patterns.flat_map do |pattern|
               matched_files = Pathname.glob(pattern)
               matched_files.empty? ? nil : matched_files.map { |f| Pathname.new f.realpath }
             end.uniq.compact
@@ -44,20 +69,8 @@ module Rokujo
           @files
         end
 
-        def dist_filename
-          Pathname.new(replace(@dist_filename))
-        end
-
-        def dist_url
-          replace(@dist_url)
-        end
-
-        def worksubdir
-          replace(@worksubdir)
-        end
-
         def no_worksubdir?
-          @no_worksubdir
+          @args[:no_worksubdir]
         end
 
         def fetched?
@@ -84,7 +97,8 @@ module Rokujo
 
         # the root directory of the extracted files
         def workdir
-          WRKDIRPREFIX / worksubdir
+          path = @args[:workdir] ? @args[:workdir] / worksubdir : WRKDIRPREFIX / worksubdir
+          Pathname.new(path).expand_path
         end
 
         def workdir_relative
@@ -93,11 +107,15 @@ module Rokujo
 
         # the file name to extract
         def distfile
-          Pathname.new(DISTDIRPREFIX / dist_filename)
+          Pathname.new(distdir / dist_filename)
+        end
+
+        def distdir
+          Pathname.new(@args[:distdir] || DISTDIRPREFIX)
         end
 
         def create_tmx
-          FileUtils.mkdir_p STAGEDIR
+          FileUtils.mkdir_p STAGEDIRPREFIX
 
           files.each do |file|
             convert_to_tmx(file)
@@ -108,32 +126,28 @@ module Rokujo
           FileUtils.rm_rf(workdir)
         end
 
-        def logger
-          return @logger if @logger
-
-          @logger = Rokujo::TMX::FOSS::Logger.new(:app)
-        end
-
         private
 
         def convert_to_tmx(file)
           raise "file is not readable: #{file}" unless file.readable?
 
-          stage_dir = STAGEDIR / worksubdir / file.relative_path_from(workdir).dirname
+          dest = stagedir / worksubdir / file.relative_path_from(workdir).dirname
 
-          logger.info "Creating stage_dir: #{stage_dir}"
-          FileUtils.mkdir_p(stage_dir)
+          logger.info "Creating dest: #{dest}"
+          FileUtils.mkdir_p(dest)
           logger.debug "workdir: #{workdir}"
-          run_converter(file, stage_dir)
+          run_converter(file, dest.expand_path)
         end
 
-        def run_converter(file, stage_dir)
+        def run_converter(file, dest)
+          raise "dest, `#{dest}`, must be absolute path" unless dest.absolute?
+
           Dir.chdir(workdir) do
             logger.debug "tikal -2tmx #{file.to_s.shellescape} -sl EN -tl JA"
             `tikal -2tmx #{file.to_s.shellescape} -sl EN -tl JA`
             tmx_file = "#{file}.tmx"
-            logger.info "Moving #{tmx_file} to #{stage_dir}"
-            FileUtils.mv tmx_file, stage_dir
+            logger.info "Moving #{tmx_file} to #{dest}"
+            FileUtils.mv tmx_file, dest
           end
         end
 
