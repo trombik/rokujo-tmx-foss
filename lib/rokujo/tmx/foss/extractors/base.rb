@@ -32,8 +32,7 @@ module Rokujo
           # Returns the file extention. Supports double-extention.
           def extname
             if include_two_dots? file.to_s
-              extname = file.to_s.split(".")[-2..].join(".")
-              ".#{extname}"
+              double_extname_from(file)
             else
               file.extname
             end
@@ -51,6 +50,16 @@ module Rokujo
 
           def include_two_dots?(str)
             str.split(".").size > 2
+          end
+
+          def double_extname_from(file)
+            string = file.to_s
+            case string
+            when /(\.tar\.gz|tar\.xz)\z/
+              ::Regexp.last_match(1)
+            else
+              file.extname
+            end
           end
         end
       end

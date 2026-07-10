@@ -49,4 +49,42 @@ RSpec.describe Rokujo::TMX::FOSS::Extractor::Base do
       expect { instance.extract }.to raise_error NotImplementedError
     end
   end
+
+  describe "extname" do
+    it "returns .zip" do
+      expect(instance.extname).to eq ".zip"
+    end
+
+    context "when extname is 1.2.3.zip" do
+      let(:file) do
+        file = instance_double(Pathname)
+        allow(file).to receive_messages(
+          to_s: "1.2.3.zip",
+          extname: ".zip",
+          exist?: true
+        )
+        file
+      end
+
+      it "returns .zip" do
+        expect(instance.extname).to eq ".zip"
+      end
+    end
+
+    context "when extname is 1.2.3.tar.gz" do
+      let(:file) do
+        file = instance_double(Pathname)
+        allow(file).to receive_messages(
+          to_s: "1.2.3.tar.gz",
+          extname: ".gz",
+          exist?: true
+        )
+        file
+      end
+
+      it "returns .tar.gz" do
+        expect(instance.extname).to eq ".tar.gz"
+      end
+    end
+  end
 end
