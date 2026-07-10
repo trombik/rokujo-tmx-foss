@@ -3,6 +3,7 @@ require "spec_helper"
 RSpec.describe Rokujo::TMX::FOSS::Project do
   let(:project) { described_class.new(**args) }
   let(:distdir) { Pathname.new "/usr/ports/distfiles" }
+  let(:license_file) { "COPYING" }
   let(:args) do
     {
       # options
@@ -20,6 +21,7 @@ RSpec.describe Rokujo::TMX::FOSS::Project do
       no_worksubdir: true,
       src_language: "en",
       target_language: "ja",
+      license_file: license_file,
       files: ["src/**/ja.po"]
     }
   end
@@ -136,6 +138,24 @@ RSpec.describe Rokujo::TMX::FOSS::Project do
 
       it "is the same DISTDIRPREFIX" do
         expect(project.distdir).to eq described_class::DISTDIRPREFIX
+      end
+    end
+  end
+
+  describe "#license_file" do
+    it "returns Pathname to the file" do
+      expect(project.license_file).to be_a Pathname
+    end
+
+    it "returns COPYING" do
+      expect(project.license_file.to_s).to end_with("COPYING")
+    end
+
+    context "when license_file is not defined" do
+      let(:license_file) { nil }
+
+      it "returns nil" do
+        expect(project.license_file).to be_nil
       end
     end
   end

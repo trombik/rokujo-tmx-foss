@@ -7,5 +7,6 @@
   no_worksubdir: false
   src_language: en
   target_language: ja
+  license_file: LICENSE
   files:
     - "po-*/**/ja.po"

@@ -55,11 +55,14 @@ jobs:
             dir_name="${dir%/}"
 
             echo "Packing artifacts for: ${dir_name}"
-            tar -czf "${dir_name}.tar.gz" "$dir_name"
+            tar -czf "${dir_name}.tgz" "$dir_name"
+            zip -r "${dir_name}.zip" "$dir_name"
           done
 
       - name: Create Release and Upload Assets
         uses: softprops/action-gh-release@v2
         with:
-          files: stage/*.tar.gz
+          files: |
+            stage/*.tgz
+            stage/*.zip
           generate_release_notes: true

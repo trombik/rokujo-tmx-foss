@@ -14,6 +14,8 @@ module Rokujo
           def fetch
             return if fetched?
 
+            logger.debug "Fetching URI: #{uri}"
+
             Tempfile.create do |file|
               fetch_stream(uri, file)
               FileUtils.cp file, path
@@ -42,13 +44,10 @@ module Rokujo
                   response.read_body do |chunk|
                     file.write(chunk)
                   end
+                  file.close
                 when Net::HTTPRedirection
                   location = response["location"]
                   new_uri = URI.join(target_uri, location)
-
-                  file.rewind
-                  file.truncate(0)
-
                   return fetch_stream(new_uri, file, redirect_count + 1)
                 else
                   response.value
