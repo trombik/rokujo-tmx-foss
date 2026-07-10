@@ -79,12 +79,12 @@ module Rokujo
 
         def fetch
           return if fetched?
+          FileUtils.mkdir_p distdir
 
           Rokujo::TMX::FOSS::Downloader::HTTP.new(uri: dist_url, path: distfile, logger: logger).fetch
         end
 
         def extract
-          FileUtils.mkdir_p WRKDIRPREFIX
           FileUtils.mkdir_p workdir
           dest_dir = no_worksubdir? ? workdir : WRKDIRPREFIX
           extractor = Rokujo::TMX::FOSS::Extractor.for(dist_filename).new(
@@ -115,7 +115,7 @@ module Rokujo
         end
 
         def create_tmx
-          FileUtils.mkdir_p STAGEDIRPREFIX
+          FileUtils.mkdir_p stagedir
 
           files.each do |file|
             convert_to_tmx(file)
