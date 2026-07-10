@@ -42,7 +42,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency "dry-cli", "~> 1.1"
   spec.add_dependency "dry-logger", "~> 1.2"
   spec.add_dependency "fiddle", "~> 1.1"
-  spec.add_dependency "httpx", "~> 1.8"
   spec.add_dependency "minitar", "~> 1.0"
   spec.add_dependency "ruby-xz", "~> 1.0"
   spec.add_dependency "rubyzip", "~> 3.4"
