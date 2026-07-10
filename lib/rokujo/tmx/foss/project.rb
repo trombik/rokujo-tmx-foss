@@ -53,6 +53,12 @@ module Rokujo
           @args[:stagedir] || STAGEDIRPREFIX
         end
 
+        def license_file
+          return unless @args[:license_file]
+
+          workdir / @args[:license_file]
+        end
+
         # Returns Array of Pathname of matched files. The file paths are absolute
         # paths.
         def files
@@ -121,6 +127,7 @@ module Rokujo
           files.each do |file|
             convert_to_tmx(file)
           end
+          copy_license_file
         end
 
         def clean
@@ -128,6 +135,13 @@ module Rokujo
         end
 
         private
+
+        def copy_license_file
+          return unless license_file
+
+          dest = stagedir / worksubdir
+          FileUtils.cp license_file, dest
+        end
 
         def convert_to_tmx(file)
           raise "file is not readable: #{file}" unless file.readable?

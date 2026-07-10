@@ -5,6 +5,7 @@
   dist_filename: "%%name%%-%%version%%.tar.gz"
   worksubdir: "%%name%%-%%version%%"
   no_worksubdir: false
+  license_file: COPYING
   files:
     - po/ja.po
 
@@ -15,6 +16,7 @@
   dist_filename: "%%name%%-%%version%%.tar.gz"
   worksubdir: "%%name%%-%%version%%"
   no_worksubdir: false
+  license_file: COPYING
   files:
     - po/ja.po
 
@@ -25,6 +27,7 @@
   dist_filename: "%%name%%-%%version%%.tar.gz"
   worksubdir: "%%name%%-%%version%%"
   no_worksubdir: false
+  license_file: COPYING
   files:
     - po/ja.po
 
@@ -35,6 +38,7 @@
   dist_filename: "%%name%%-%%version%%.tar.gz"
   worksubdir: "%%name%%-%%version%%"
   no_worksubdir: false
+  license_file: COPYING
   files:
     - po/ja.po
 
@@ -45,6 +49,7 @@
   dist_filename: "%%name%%-%%version%%.tar.gz"
   worksubdir: "%%name%%-%%version%%"
   no_worksubdir: false
+  license_file: COPYING
   files:
     - panels/system/datetime/po-timezones/ja.po
     - po/ja.po
@@ -56,5 +61,6 @@
   dist_filename: "%%name%%-%%version%%.tar.gz"
   worksubdir: "%%name%%-%%version%%"
   no_worksubdir: false
+  license_file: COPYING
   files:
     - po/ja.po

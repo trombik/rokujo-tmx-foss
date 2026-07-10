@@ -8,5 +8,7 @@
   no_worksubdir: false
   src_language: en
   target_language: ja
+  # XXX no GPL-2.0-or-later but no file in the archive
+  license_file:
   files:
     - ja.po
