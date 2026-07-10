@@ -1,0 +1,59 @@
+- name: glib
+  template:
+    version: "2.88.2"
+  dist_url: https://gitlab.gnome.org/GNOME/%%name%%/-/archive/%%version%%/%%name%%-%%version%%.tar.gz
+  dist_filename: "%%name%%-%%version%%.tar.gz"
+  worksubdir: "%%name%%-%%version%%"
+  no_worksubdir: false
+  files:
+    - po/ja.po
+
+- name: gnome-software
+  template:
+    version: "50.3"
+  dist_url: https://gitlab.gnome.org/GNOME/%%name%%/-/archive/%%version%%/%%name%%-%%version%%.tar.gz
+  dist_filename: "%%name%%-%%version%%.tar.gz"
+  worksubdir: "%%name%%-%%version%%"
+  no_worksubdir: false
+  files:
+    - po/ja.po
+
+- name: nautilus
+  template:
+    version: "50.2"
+  dist_url: https://gitlab.gnome.org/GNOME/%%name%%/-/archive/%%version%%/%%name%%-%%version%%.tar.gz
+  dist_filename: "%%name%%-%%version%%.tar.gz"
+  worksubdir: "%%name%%-%%version%%"
+  no_worksubdir: false
+  files:
+    - po/ja.po
+
+- name: gtk
+  template:
+    version: "4.23.2"
+  dist_url: https://gitlab.gnome.org/GNOME/%%name%%/-/archive/%%version%%/%%name%%-%%version%%.tar.gz
+  dist_filename: "%%name%%-%%version%%.tar.gz"
+  worksubdir: "%%name%%-%%version%%"
+  no_worksubdir: false
+  files:
+    - po/ja.po
+
+- name: gnome-control-center
+  template:
+    version: "50.3"
+  dist_url: https://gitlab.gnome.org/GNOME/%%name%%/-/archive/%%version%%/%%name%%-%%version%%.tar.gz
+  dist_filename: "%%name%%-%%version%%.tar.gz"
+  worksubdir: "%%name%%-%%version%%"
+  no_worksubdir: false
+  files:
+    - panels/system/datetime/po-timezones/ja.po
+    - po/ja.po
+
+- name: gnome-builder
+  template:
+    version: "50.0"
+  dist_url: https://gitlab.gnome.org/GNOME/%%name%%/-/archive/%%version%%/%%name%%-%%version%%.tar.gz
+  dist_filename: "%%name%%-%%version%%.tar.gz"
+  worksubdir: "%%name%%-%%version%%"
+  no_worksubdir: false
+  files:
