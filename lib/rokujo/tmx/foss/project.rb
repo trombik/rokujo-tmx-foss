@@ -79,6 +79,7 @@ module Rokujo
 
         def fetch
           return if fetched?
+
           FileUtils.mkdir_p distdir
 
           Rokujo::TMX::FOSS::Downloader::HTTP.new(uri: dist_url, path: distfile, logger: logger).fetch
