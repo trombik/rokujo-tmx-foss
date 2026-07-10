@@ -55,7 +55,7 @@ module Rokujo
           def double_extname_from(file)
             string = file.to_s
             case string
-            when /(\.tar\.gz|tar\.xz)\z/
+            when /(\.tar\.gz|\.tar\.xz)\z/
               ::Regexp.last_match(1)
             else
               file.extname

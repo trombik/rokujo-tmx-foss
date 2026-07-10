@@ -86,5 +86,21 @@ RSpec.describe Rokujo::TMX::FOSS::Extractor::Base do
         expect(instance.extname).to eq ".tar.gz"
       end
     end
+
+    context "when extname is 1.2.3.tar.xz" do
+      let(:file) do
+        file = instance_double(Pathname)
+        allow(file).to receive_messages(
+          to_s: "1.2.3.tar.xz",
+          extname: ".xz",
+          exist?: true
+        )
+        file
+      end
+
+      it "returns .tar.xz" do
+        expect(instance.extname).to eq ".tar.xz"
+      end
+    end
   end
 end
