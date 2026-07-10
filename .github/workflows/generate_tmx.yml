@@ -49,20 +49,23 @@ jobs:
 
       - name: Archive artifacts per directory
         run: |
+          mkdir packages
+          tar -czf packages/all.tgz -C stage .
+          (cd stage && zip -r packages/all.zip .)
           cd stage
 
           for dir in */; do
             dir_name="${dir%/}"
 
             echo "Packing artifacts for: ${dir_name}"
-            tar -czf "${dir_name}.tgz" "$dir_name"
-            zip -r "${dir_name}.zip" "$dir_name"
+            tar -czf "../packages/${dir_name}.tgz" "$dir_name"
+            zip -r "../packages/${dir_name}.zip" "$dir_name"
           done
 
       - name: Create Release and Upload Assets
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            stage/*.tgz
-            stage/*.zip
+            packages/*.tgz
+            packages/*.zip
           generate_release_notes: true
